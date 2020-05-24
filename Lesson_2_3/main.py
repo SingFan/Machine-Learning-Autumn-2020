@@ -6,7 +6,7 @@ Created on Thu Jun 27 12:57:28 2019
 """
 
 # =============================================================================
-# Data Types
+# Data Types (integer, float, string, list, set, dict)
 # =============================================================================
 
 # 1. integer and float
@@ -34,6 +34,10 @@ text[10]
 
 L = len(text)
 
+split_text = text.split(' ')
+
+' '.join(split_text) 
+
 #text[L]  # Error
 #text[:10]
 
@@ -43,6 +47,7 @@ text[5:]
 
 
 print(y,x)
+
 # 3. list
 
 x=[1,2,3,4]
@@ -51,8 +56,8 @@ x=[1,2,3,4]
 # [1,2,3,4]
 # [5,6,7,8]
 
-
 x = [[1,2,3,4], [5,6,7,8]]
+
 x[0]
 x[0][0]
 
@@ -72,8 +77,6 @@ x[1]
 
 x = [[1,2,3,4] , [5,6,7]]
 x[0][1:4] # [2, 3, 4]
-x[1][4:1] # [5, 6, 7]
-
 
 x = [0,1,2,3,4,5,6,7,8,9]
 len(x)
@@ -84,7 +87,7 @@ x.extend([11,12,13]) # similar to .append, but .extend conccatenate from the inp
 
 x = range(10)
 len(x)
-
+   
 # 5. dict
 data = {'age': 34, 'children' : [1,2], 1: 'apple'}
 
@@ -100,6 +103,12 @@ x.intersection(y)
 x = x.union(y)
 len(y)
 
+# Example: Merge two lists and drop duplicated entries in the merged list
+
+x = ['MSFT','GOOG','AAPL','HPQ','MSFT']
+y = ['XOM', 'GOOG']
+x = list(set(x).union(set(y)))   
+
 # 7. for loop
 animals = ['cat', 'dog', 'monkey']
 for animal in animals:
@@ -114,22 +123,24 @@ for i in range(10):
 # Exercise: create a list with ascending order integer from 0 to 10
 # =============================================================================
 
-
-
-
-
-
+x = list()
+for i in range(10):
+    x.append(i)
 
 
 # =============================================================================
 # Exercise: Find smallest number in a list
 # =============================================================================
+
 import numpy as np
 Test = list(np.floor(np.random.rand(10)*100))
 
+minimium = Test[0]
+for x in Test:
+    if x < minimium:
+        minimium = x
 
-
-
+print(minmium)
 
 
 
@@ -294,6 +305,17 @@ Data['2018']
 Data['2019Q1']
 Data.index.quarter
 
+# nan entries filling in
+df = pd.DataFrame([[np.nan, 2, np.nan, 0],
+		[3, 4, np.nan, 1],
+		[np.nan, np.nan, np.nan, 5],
+		[np.nan, 3, np.nan, 4]],
+		columns=['A','B','C','D'])
+
+df.fillna(0)
+df.fillna(method='ffill') # forward fill
+values = {'A': 0, 'B': 1, 'C': 2, 'D': 3} 
+df.fillna(value=values)
 # =============================================================================
 # plot
 # =============================================================================
@@ -338,17 +360,39 @@ plt.show()
 # Exercise 1: Plot y = x^2
 # =============================================================================
 
-
-
-
-
+N = 100
+x = np.arange(10)
+plt.figure()
+plt.plot(x**2)
+    
+plt.xlabel("x")
+plt.ylabel("$y=x^2$")
+plt.title("Plot of y = $x^2$")
 
 
 # =============================================================================
 # Exercise 2: write a function of y = a*x^2 + b*x + c and plot graph
 # =============================================================================
 
+def function(x, a, b, c):
+    y = a*x**2 + b*x + c
+    return y
 
+x_start = -10
+x_end   = 10
+y = []
+a = 1
+b = 2
+c = 1
+for x in np.arange(x_start, x_end, 0.1):
+    y.append(function(x, a, b, c))
+
+plt.figure()
+plt.plot(np.arange(x_start, x_end, 0.1),y)
+    
+plt.xlabel("x")
+plt.ylabel("$y=x^2$")
+plt.title("Plot of y = $x^2$")
 
 
 
@@ -359,14 +403,19 @@ plt.show()
 
 N_sim = 1e3
 data  = np.random.randn(int(N_sim)) # int only
+average = 0
+for i in np.arange(len(data)):
+    average = average + data[i]
+
+average = average/len(data)
+print("Average: %.5f"%(average)) # decimal places
 
 
+#plt.figure()
+#plt.scatter(np.arange(len(data)), data)
 
-
-
-
-
-
+plt.figure()
+plt.hist(data, 500) # probability density function of standard normal distribution
 
 
 
@@ -378,9 +427,12 @@ data  = np.random.randn(int(N_sim)) # int only
 
 # Hints: consider Ax = c
 
+A = np.array([[2,1],[3,2]])
+c = np.array([[3],[4]])
 
+x = np.linalg.solve(A, c)
 
-
+np.matmul(A,x)
 
 
 
