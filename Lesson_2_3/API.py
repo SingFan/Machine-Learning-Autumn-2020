@@ -10,9 +10,16 @@ import datetime as dt
 import matplotlib.pyplot as plt
 import pickle
 from alpha_vantage.timeseries import TimeSeries
+import pandas as pd
+import time
+
+# =============================================================================
+# Download intraday data
+# =============================================================================
 
 ts = TimeSeries(key='ORVJZ8BPU84FLDNN', output_format='pandas')
 data, meta_data = ts.get_intraday(symbol='MSFT',interval='1min', outputsize='full')
+ts.get_daily_adjusted(symbol='MSFT', outputsize='full')
 
 # today       = dt.date.today()
 # thirty_days = dt.timedelta(days=30)
@@ -23,101 +30,64 @@ data, meta_data = ts.get_intraday(symbol='MSFT',interval='1min', outputsize='ful
 
 # quandl.get("WIKI/AMZN", start_date="2017-7-10", end_date="2018-7-10")
 
-import pandas as pd
+# =============================================================================
+# Import list of tickers
+# =============================================================================
+Data_ticker = pd.read_excel('Ticker_list.xlsx', header = 0)
+Data_ticker = Data_ticker.iloc[:5,:]
 
-Ticker = pd.read_csv('tickers_sp500.csv', header = 0)
-
+# =============================================================================
+# Calling API
+# =============================================================================
 Dataset = pd.DataFrame()
 Dataset_dict      = dict()
 Dataset_info_dict = dict()
-for ticker in Ticker['Symbol']:
+for ticker in Data_ticker['Ticker']:
     try:
-        data, meta_data = ts.get_intraday(symbol=ticker,interval='5min', outputsize='full')
-        
+        time.sleep(12)
+        # data, meta_data = ts.get_intraday(symbol=ticker,interval='5min', outputsize='full')
+        data, meta_data = ts.get_daily_adjusted(symbol=ticker, outputsize='full')
         Dataset_dict[ticker]      = data
         Dataset_info_dict[ticker] = meta_data
-        
-        # Dataset_dict[ticker] = quandl.get("WIKI/"+ticker, start_date="2000-1-1", end_date="2018-12-31")
-        # Dataset_dict[ticker] = quandl.get("WIKI/"+ticker, start_date="2000-1-1", end_date="2018-12-31")
 
-        print(ticker, 'Data length:', len(Dataset_dict[ticker]['close']))
+        print(ticker, 'Data length:', len(Dataset_dict[ticker]['5. adjusted close']))
     except:
         print(ticker, 'error')
 
-for ticker in Ticker['Symbol']:
+for ticker in Data_ticker['Ticker']:
     print(ticker)
-    # Dataset_dict[ticker] = quandl.get("WIKI/"+ticker, start_date="2000-1-1", end_date="2018-12-31")
     try:
-        Dataset[ticker] = Dataset_dict[ticker]['close']
-    # print('Data length: ', len(Dataset_dict[ticker]['Adj. Close']))
+        Dataset[ticker] = Dataset_dict[ticker]['5. adjusted close']
     except:
         pass
 
-
+Dataset.sort_index(ascending=True, inplace = True)
 Dataset.to_csv('Data_sp500.csv')
 
 with open('Data_sp500.p', 'wb') as fp:
     pickle.dump(Dataset_dict, fp, protocol=pickle.HIGHEST_PROTOCOL)
 
-
+# with open('Data_sp500.p', 'rb') as fp:
+#     data2 = pickle.load(fp) 
 
 # =============================================================================
-# Eye-ball check
+# Pre-processing the data
 # =============================================================================
-# MMM delete the last segment
-# BKNG delete whole series
-# =============================================================================
-# 
-# =============================================================================
-    
-    
-    
-    
-    
-# # with open('Data_sp100.p', 'rb') as fp:
-# #     data = pickle.load(fp) 
-# # =============================================================================
-# # organizing data
-# # =============================================================================
-# count_null = (~Dataset.isnull()).sum()
+Dataset = pd.read_csv('Data_sp500.csv')
 
-# selected_tickers = count_null.index[count_null>3250]
-# Dataset_selected = Dataset[selected_tickers]
+Dataset.iloc[5,0] = np.nan
+Dataset.fillna(method = 'ffill', inplace = True)
 
-# Dataset_selected.to_csv('Data_sp100_selected.csv')
+Return = Dataset.pct_change(1)
+Return.iloc[0,:] = 0
 
-# # =============================================================================
-# # Commodity
-# # =============================================================================
-# Ticker_commodity = ['BP/SPOT_CRUDE_OIL_PRICES','WGC/GOLD_DAILY_USD','BCIW/_INX']
-
-# Dataset = pd.DataFrame()
-# Dataset_dict = dict()
-
-
-# ticker = 'BP/SPOT_CRUDE_OIL_PRICES'
-# Dataset_dict[ticker] = quandl.get(ticker, start_date="2005-1-1", end_date="2018-12-31")
-# Dataset[ticker] = Dataset_dict[ticker]['Brent']
-
-# ticker = 'WGC/GOLD_DAILY_USD'
-# Dataset_dict[ticker] = quandl.get(ticker, start_date="2005-1-1", end_date="2018-12-31")
-# Dataset[ticker] = Dataset_dict[ticker]['Value']
-
-# Ticker_commodity = 'BCIW/_INX'
-# Dataset_dict[ticker] = quandl.get(ticker, start_date="2005-1-1", end_date="2018-12-31")
-# Dataset[ticker] = Dataset_dict[ticker]['Value']
+Return.describe()
+Return.std()
 
 
 
 
-# Dataset.to_csv('Data_commodity.csv')
 
-# with open('Data_commodity.p', 'wb') as fp:
-#     pickle.dump(Dataset_dict, fp, protocol=pickle.HIGHEST_PROTOCOL)
-
-# https://fred.stlouisfed.org/series/DCOILBRENTEU
-
-# https://www.investing.com/commodities/gold-historical-data
 
 
 
