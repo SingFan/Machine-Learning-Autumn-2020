@@ -44,7 +44,7 @@ Dataset_dict      = dict()
 Dataset_info_dict = dict()
 for ticker in Data_ticker['Ticker']:
     try:
-        time.sleep(12)
+        time.sleep(12) # avoid exceed calling limit (5 asks per minute)
         # data, meta_data = ts.get_intraday(symbol=ticker,interval='5min', outputsize='full')
         data, meta_data = ts.get_daily_adjusted(symbol=ticker, outputsize='full')
         Dataset_dict[ticker]      = data
@@ -73,14 +73,28 @@ with open('Data_sp500.p', 'wb') as fp:
 # =============================================================================
 # Pre-processing the data
 # =============================================================================
-Dataset = pd.read_csv('Data_sp500.csv')
+Dataset = pd.read_csv('Data_sp500.csv', index_col = 0)
 
 Dataset.iloc[5,0] = np.nan
 Dataset.fillna(method = 'ffill', inplace = True)
+Dataset.fillna(method = 'bfill', inplace = True)
 
+
+# =============================================================================
+# Basic tranformations
+# =============================================================================
+
+# Daily return
 Return = Dataset.pct_change(1)
 Return.iloc[0,:] = 0
 
+# Moving average
+horizon = 12
+MA = Dataset.rolling(window = horizon).mean()
+MA.fillna(method = 'bfill', inplace = True)
+
+# Check for abnormal columns 
+# (e.g. look at std of the columns)
 Return.describe()
 Return.std()
 
