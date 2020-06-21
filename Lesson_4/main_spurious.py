@@ -11,8 +11,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 data = pd.read_csv('data_spurious.txt', header = None) # US spend, suicides
 
-Y = np.reshape(np.array(data.iloc[:,0]),(-1,1))
-X = np.reshape(np.array(data.iloc[:,1]),(-1,1))
+#Y = np.reshape(np.array(data.iloc[:,0]),(-1,1))
+#X = np.reshape(np.array(data.iloc[:,1]),(-1,1))
+
+Y = data.iloc[:,[0]]
+X = data.iloc[:,[1]]
 
 plt.figure()
 plt.scatter(Y,X)

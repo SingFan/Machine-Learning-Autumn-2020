@@ -176,6 +176,11 @@ plt.figure()
 plt.scatter(Y_test, y_test_predict)
 plt.show()
 
+#plt.figure()
+#plt.plot(np.array(Y_test))
+#plt.plot(np.array(y_test_predict))
+#plt.show()
+
 
 # =============================================================================
 # # model evaluation for Lasso regression
