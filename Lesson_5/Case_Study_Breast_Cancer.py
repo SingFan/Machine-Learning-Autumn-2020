@@ -109,7 +109,7 @@ print(confusion)
 
 print(classification_report(y_test,y_predict))
 
-param_grid = {'C': [0.1, 1, 10, 100], 'gamma': [1, 0.1, 0.01, 0.001], 'kernel': ['rbf']}
+
 
 # =============================================================================
 # grid search
@@ -117,7 +117,9 @@ param_grid = {'C': [0.1, 1, 10, 100], 'gamma': [1, 0.1, 0.01, 0.001], 'kernel': 
 
 from sklearn.model_selection import GridSearchCV
 
-grid = GridSearchCV(SVC(),param_gr id,refit=True,verbose=4)
+param_grid = {'C': [0.1, 1, 10, 100], 'gamma': [1, 0.1, 0.01, 0.001], 'kernel': ['rbf']}
+
+grid = GridSearchCV(SVC(),param_grid,refit=True,verbose=4)
 grid.fit(X_train_scaled,y_train)
 
 print (grid.best_params_)
