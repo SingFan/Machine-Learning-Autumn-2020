@@ -9,6 +9,8 @@ Created on Sat Aug  3 16:54:37 2019
 
 from sklearn import datasets
 from sklearn.svm import SVC
+import numpy as np
+import matplotlib.pyplot as plt
 
 iris = datasets.load_iris()
 X = iris["data"][:, (2, 3)]  # petal length, petal width

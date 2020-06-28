@@ -6,7 +6,8 @@ Created on Sat Aug  3 21:03:19 2019
 """
 
 from sklearn.linear_model import LogisticRegression
-
+import numpy as np
+import matplotlib.pyplot as plt
 # =============================================================================
 # plot of logit function
 # =============================================================================
@@ -29,20 +30,32 @@ iris = datasets.load_iris()
 list(iris.keys())
 
 # =============================================================================
-# Example
+# Example 1
 # =============================================================================
+
+print("Example 1: logistic (Iris or not, with one explanary variable)")
+
+
 from sklearn import datasets
 iris = datasets.load_iris()
 
 print(list(iris.keys()))
-print(iris.DESCR)
+
+# print(iris.DESCR)
 
 X = iris["data"][:, 3:]  # petal width
 y = (iris["target"] == 2).astype(np.int)  # 1 if Iris-Virginica, else 0
 
-# logistic regression
+# =============================================================================
+# # logistic regression
+# =============================================================================
+
 log_reg = LogisticRegression(solver="liblinear", C=10**10, random_state=42)
 log_reg.fit(X, y)
+
+print("logistic coeff", log_reg.coef_)
+print("logistic intercept", log_reg.intercept_)
+
 
 # plot of logit function
 X_new   = np.linspace(0, 3, 1000).reshape(-1, 1)
@@ -53,7 +66,9 @@ plt.plot(X_new, y_proba[:, 1], "g-", linewidth=2, label="Iris-Virginica")
 plt.plot(X_new, y_proba[:, 0], "b--", linewidth=2, label="Not Iris-Virginica")
 plt.show()
 
-# demonstration of classifying with logit function
+# =============================================================================
+# # demonstration of classifying with logit function
+# =============================================================================
 X_new   = np.linspace(0, 3, 1000).reshape(-1, 1)
 y_proba = log_reg.predict_proba(X_new)
 decision_boundary = X_new[y_proba[:, 1] >= 0.5][0]
@@ -76,14 +91,19 @@ plt.show()
 
 
 # =============================================================================
-# Example
+# Example 2
 # =============================================================================
+
+print("Example 1: logistic (Iris or not, with two explanary variables)")
 
 X = iris["data"][:, (2, 3)]  # petal length, petal width
 y = (iris["target"] == 2).astype(np.int)
 
 log_reg = LogisticRegression(solver="liblinear", C=10**10, random_state=42)
 log_reg.fit(X, y)
+
+print("logistic coeff", log_reg.coef_)
+print("logistic intercept", log_reg.intercept_)
 
 x0, x1 = np.meshgrid( np.linspace(2.9, 7, 500).reshape(-1, 1), np.linspace(0.8, 2.7, 200).reshape(-1, 1))
 
