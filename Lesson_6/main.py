@@ -27,7 +27,7 @@ from sklearn.preprocessing import StandardScaler
 sc = StandardScaler()
 sc.fit(X_train)
 X_train_std = sc.transform(X_train)
-X_test_std = sc.transform(X_test)
+X_test_std  = sc.transform(X_test)
 
 # =============================================================================
 # plot tools
@@ -96,8 +96,7 @@ y_combined = np.hstack((y_train, y_test))
 
 # plot of train set and test set
 plt.figure()
-plot_decision_regions(X_combined, y_combined, 
-                      classifier=tree, test_idx=range(105, 150))
+plot_decision_regions(X_combined, y_combined, classifier=tree, test_idx=range(105, 150))
 
 plt.xlabel('petal length [cm]')
 plt.ylabel('petal width [cm]')
@@ -112,9 +111,7 @@ plot_decision_regions(X_test, y_test,classifier=tree)
 
 from sklearn.tree import export_graphviz
 
-export_graphviz(tree, 
-                out_file='tree.dot', 
-                feature_names=['petal length', 'petal width'])
+export_graphviz(tree, out_file='tree.dot', feature_names=['petal length', 'petal width'])
 
 from IPython.display import Image
 Image(filename='./images/03_18.png', width=600)
