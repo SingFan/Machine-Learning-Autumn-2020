@@ -1,0 +1,11 @@
+1. Basic Statistics You NEED to Know for Data Science
+
+https://towardsdatascience.com/an-extensive-guide-to-exploratory-data-analysis-ddd99a03199e
+
+2. An Extensive Step by Step Guide to Exploratory Data Analysis
+
+https://towardsdatascience.com/basic-statistics-you-need-to-know-for-data-science-1fdd290f59b5
+
+3. All Machine Learning Models Explained in 6 Minutes
+
+https://towardsdatascience.com/basic-statistics-you-need-to-know-for-data-science-1fdd290f59b5
