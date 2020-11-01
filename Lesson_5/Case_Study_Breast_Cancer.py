@@ -236,5 +236,56 @@ print(classification_report(y_test,grid_predictions))
 #F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
 #
 #The f1-score's best value is 1 and worst value is 0, like the precision and recall scores. It is a useful metric for taking into account both measures at once.
-#
+
+
+
+# =============================================================================
+# 
+# =============================================================================
+
+
+from sklearn.ensemble import RandomForestClassifier
+
+
+
+print('Class labels:', np.unique(y))
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+
+
+forest = RandomForestClassifier(criterion='entropy',
+                                n_estimators=10, 
+                                random_state=1,
+                                n_jobs=2)
+forest.fit(X_train, y_train)
+
+y_predict = forest.predict(X_test)
+score = forest.score(X_test, y_test)
+
+
+feature_importances = forest.feature_importances_
+feature_importances_name = X.columns[np.argsort(feature_importances)[::-1]]
+feature_importances = feature_importances[np.argsort(feature_importances)[::-1]]
+
+
+x_axis = range(len(feature_importances))
+
+plt.figure()
+plt.bar(x_axis, feature_importances)
+plt.xticks(x_axis, feature_importances_name, rotation=90)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
