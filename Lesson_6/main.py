@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 
 iris = datasets.load_iris()
 X = iris.data[:, [2, 3]]
+# X = iris.data
 y = iris.target
 
 print('Class labels:', np.unique(y))
@@ -84,6 +85,7 @@ from matplotlib.colors import ListedColormap
 # =============================================================================
 # decision tree
 # =============================================================================
+
 from sklearn.tree import DecisionTreeClassifier
 
 tree = DecisionTreeClassifier(criterion='entropy', max_depth=3, random_state=0)
@@ -156,21 +158,23 @@ plt.title('Accuracy at max_depth from 1 to 5')
 
 from sklearn.ensemble import RandomForestClassifier
 
+iris = datasets.load_iris()
+
+X = iris.data
+y = iris.target
+
+print('Class labels:', np.unique(y))
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+
+
 forest = RandomForestClassifier(criterion='entropy',
                                 n_estimators=10, 
                                 random_state=1,
                                 n_jobs=2)
 forest.fit(X_train, y_train)
-
-plt.figure()
-plot_decision_regions(X_combined, y_combined, classifier=forest, test_idx=range(105, 150))
-
-plt.xlabel('petal length [cm]')
-plt.ylabel('petal width [cm]')
-plt.legend(loc='upper left')
-plt.tight_layout()
-# plt.savefig('./figures/random_forest.png', dpi=300)
-plt.show()
 
 y_predict = forest.predict(X_test)
 score = forest.score(X_test, y_test)
@@ -180,7 +184,11 @@ from sklearn.metrics import classification_report, accuracy_score,confusion_matr
 
 cm = confusion_matrix(y_test,forest.predict(X_test))
 
+# https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+forest.feature_importances_
 
+
+# https://www.kaggle.com/residentmario/notes-on-classification-probability-calibration
 
 
 
